@@ -101,9 +101,7 @@ public class Zip {
                 System.out.println(" Got it. I've added this task:");
                 System.out.println("  " + e);
                 System.out.println(" Now you have " + list.size() + " tasks in the list.");
-            }
-
-            else {
+            } else {
                 System.out.println(" Sorry, I don't understand that command.");
             }
 
