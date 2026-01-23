@@ -6,7 +6,7 @@ public class Zip {
 
     private static List<Task> list = new ArrayList<>();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ZipException {
 
         Scanner scanner = new Scanner(System.in);
 
@@ -16,7 +16,7 @@ public class Zip {
         printLine();
 
         while (true) {
-            String input = scanner.nextLine().trim();
+            String input = scanner.nextLine();
             printLine();
 
             if (input.equalsIgnoreCase("bye")) {
@@ -40,67 +40,96 @@ public class Zip {
 
             else if (input.startsWith("mark ")) {
                 int index = Integer.parseInt(input.split(" ")[1]) - 1;
-                if (index >= 0 && index < list.size()) {
-                    list.get(index).markAsDone();
-                    System.out.println(" Nice! I've marked this task as done:");
-                    System.out.println("  " + list.get(index));
-                } else {
-                    System.out.println(" Invalid task number.");
+                try {
+                    if (index >= 0 && index < list.size()) {
+                        list.get(index).markAsDone();
+                        System.out.println(" Nice! I've marked this task as done:");
+                        System.out.println("  " + list.get(index));
+                    } else {
+                        throw new ZipException("Invalid index");
+                    }
+                } catch (ZipException e) {
+                    System.out.println(e.getMessage());
                 }
             }
 
             else if (input.startsWith("unmark ")) {
                 int index = Integer.parseInt(input.split(" ")[1]) - 1;
-                if (index >= 0 && index < list.size()) {
-                    list.get(index).markAsUndone();
-                    System.out.println(" OK, I've marked this task as not done yet:");
-                    System.out.println("  " + list.get(index));
-                } else {
-                    System.out.println(" Invalid task number.");
+                try {
+                    if (index >= 0 && index < list.size()) {
+                        list.get(index).markAsUndone();
+                        System.out.println(" OK, I've marked this task as not done yet:");
+                        System.out.println("  " + list.get(index));
+                    } else {
+                        throw new ZipException("Invalid index");
+                    }
+                } catch (ZipException e) {
+                    System.out.println(e.getMessage());
                 }
             }
 
             else if (input.startsWith("todo ")) {
-                String description = input.substring(5);
-                Task t = new ToDo(description);
-                list.add(t);
+                try {
+                    String description = input.substring(5).trim();
+                    if (description.isEmpty()) {
+                        throw new ZipException("Nothing to add to list");
+                    }
+                    Task t = new ToDo(description);
+                    list.add(t);
 
-                System.out.println(" Got it. I've added this task:");
-                System.out.println("  " + t);
-                System.out.println(" Now you have " + list.size() + " tasks in the list.");
+                    System.out.println(" Got it. I've added this task:");
+                    System.out.println("  " + t);
+                    System.out.println(" Now you have " + list.size() + " tasks in the list.");
+                } catch (ZipException e) {
+                    System.out.println(e.getMessage());
+                }
             }
 
             else if (input.startsWith("deadline ")) {
-                String content = input.substring(9);
-                String[] parts = content.split(" /by ", 2);
+                try {
+                    String content = input.substring(9).trim();
+                    if (content.isEmpty()) {
+                        throw new ZipException("Nothing to add to list");
+                    }
+                    String[] parts = content.split(" /by ", 2);
 
-                String description = parts[0];
-                String by = parts[1];
+                    String description = parts[0];
+                    String by = parts[1];
 
-                Task d = new Deadline(description, by);
-                list.add(d);
+                    Task d = new Deadline(description, by);
+                    list.add(d);
 
-                System.out.println(" Got it. I've added this task:");
-                System.out.println("  " + d);
-                System.out.println(" Now you have " + list.size() + " tasks in the list.");
+                    System.out.println(" Got it. I've added this task:");
+                    System.out.println("  " + d);
+                    System.out.println(" Now you have " + list.size() + " tasks in the list.");
+                } catch (ZipException e) {
+                    System.out.println(e.getMessage());
+                }
             }
 
             else if (input.startsWith("event ")) {
-                String content = input.substring(6);
-                String[] firstSplit = content.split(" /from ", 2);
+                try {
+                    String content = input.substring(6).trim();
+                    if (content.isEmpty()) {
+                        throw new ZipException("Nothing to add to list");
+                    }
+                    String[] firstSplit = content.split(" /from ", 2);
 
-                String description = firstSplit[0];
-                String[] secondSplit = firstSplit[1].split(" /to ", 2);
+                    String description = firstSplit[0];
+                    String[] secondSplit = firstSplit[1].split(" /to ", 2);
 
-                String from = secondSplit[0];
-                String to = secondSplit[1];
+                    String from = secondSplit[0];
+                    String to = secondSplit[1];
 
-                Task e = new Event(description, from, to);
-                list.add(e);
+                    Task e = new Event(description, from, to);
+                    list.add(e);
 
-                System.out.println(" Got it. I've added this task:");
-                System.out.println("  " + e);
-                System.out.println(" Now you have " + list.size() + " tasks in the list.");
+                    System.out.println(" Got it. I've added this task:");
+                    System.out.println("  " + e);
+                    System.out.println(" Now you have " + list.size() + " tasks in the list.");
+                } catch (ZipException e) {
+                    System.out.println(e.getMessage());
+                }
             } else {
                 System.out.println(" Sorry, I don't understand that command.");
             }
