@@ -23,9 +23,7 @@ public class Zip {
                 System.out.println(" Bye. Hope to see you again soon!");
                 printLine();
                 break;
-            }
-
-            else if (input.equalsIgnoreCase("list")) {
+            } else if (input.equalsIgnoreCase("list")) {
                 if (list.isEmpty()) {
                     System.out.println("There are no tasks in the list");
                 } else {
@@ -36,9 +34,7 @@ public class Zip {
                         i++;
                     }
                 }
-            }
-
-            else if (input.startsWith("mark ")) {
+            } else if (input.startsWith("mark ")) {
                 int index = Integer.parseInt(input.split(" ")[1]) - 1;
                 try {
                     if (index >= 0 && index < list.size()) {
@@ -51,9 +47,7 @@ public class Zip {
                 } catch (ZipException e) {
                     System.out.println(e.getMessage());
                 }
-            }
-
-            else if (input.startsWith("unmark ")) {
+            } else if (input.startsWith("unmark ")) {
                 int index = Integer.parseInt(input.split(" ")[1]) - 1;
                 try {
                     if (index >= 0 && index < list.size()) {
@@ -66,9 +60,7 @@ public class Zip {
                 } catch (ZipException e) {
                     System.out.println(e.getMessage());
                 }
-            }
-
-            else if (input.startsWith("todo ")) {
+            } else if (input.startsWith("todo ")) {
                 try {
                     String description = input.substring(5).trim();
                     if (description.isEmpty()) {
@@ -83,9 +75,7 @@ public class Zip {
                 } catch (ZipException e) {
                     System.out.println(e.getMessage());
                 }
-            }
-
-            else if (input.startsWith("deadline ")) {
+            } else if (input.startsWith("deadline ")) {
                 try {
                     String content = input.substring(9).trim();
                     if (content.isEmpty()) {
@@ -105,9 +95,7 @@ public class Zip {
                 } catch (ZipException e) {
                     System.out.println(e.getMessage());
                 }
-            }
-
-            else if (input.startsWith("event ")) {
+            } else if (input.startsWith("event ")) {
                 try {
                     String content = input.substring(6).trim();
                     if (content.isEmpty()) {
@@ -130,6 +118,20 @@ public class Zip {
                 } catch (ZipException e) {
                     System.out.println(e.getMessage());
                 }
+            } else if (input.startsWith("delete ")) {
+                try {
+                    int index = Integer.parseInt(input.split(" ")[1]) - 1;
+                    if (index >= 0 && index < list.size()) {
+                        System.out.println("Noted. I've removed this task:");
+                        System.out.println("  " + list.get(index));
+                        Zip.list.remove(index);
+                    } else {
+                        throw new ZipException("Invalid index");
+                    }
+                } catch (ZipException e) {
+                    System.out.println(e.getMessage());
+                }
+
             } else {
                 System.out.println(" Sorry, I don't understand that command.");
             }
