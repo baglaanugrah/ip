@@ -9,6 +9,11 @@ public class Event extends Task {
     }
 
     @Override
+    public String toFileString() {
+        return "Event" + "|" + (isDone ? "1" : "0") + "|" + description + "|" + from + "|" + to;
+    }
+
+    @Override
     public String toString() {
         return "[E][" + getStatusIcon() + "] " + description
                 + " (from: " + this.from + " to: " + this.to + ")";

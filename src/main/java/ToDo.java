@@ -5,6 +5,11 @@ public class ToDo extends Task {
     }
 
     @Override
+    public String toFileString() {
+        return "Todo" + "|" + (isDone ? "1" : "0") + "|" + description;
+    }
+
+    @Override
     public String toString() {
         return "[T][" + getStatusIcon() + "] " + description;
     }
