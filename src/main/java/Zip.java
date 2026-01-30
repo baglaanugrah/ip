@@ -1,214 +1,112 @@
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.io.File;
-
 public class Zip {
 
-    private static List<Task> list = new ArrayList<>();
+    public static void main(String[] args) {
+        Storage storage = new Storage("textfiles/tasks.txt");
+        TaskList tasks = storage.load();
+        Ui ui = new Ui();
 
-    public static void main(String[] args) throws ZipException {
-
-        File file = new File("textfiles/tasks.txt");
-        System.out.println("Reading file: " + file.getAbsolutePath());
-        Zip.loadFileContent(file);
-
-        Scanner scanner = new Scanner(System.in);
-
-        printLine();
-        System.out.println(" Hello! I'm Zip");
-        System.out.println(" What can I do for you?");
-        printLine();
+        ui.showWelcome();
 
         while (true) {
-            String input = scanner.nextLine();
-            printLine();
+            try {
+                String input = ui.readCommand();
+                ui.showLine();
 
-            if (input.equalsIgnoreCase("bye")) {
-                System.out.println(" Bye. Hope to see you again soon!");
-                printLine();
-                break;
-            } else if (input.equalsIgnoreCase("list")) {
-                if (list.isEmpty()) {
-                    System.out.println("There are no tasks in the list");
-                } else {
-                    System.out.println(" Here are the tasks in your list:");
-                    int i = 1;
-                    for (Task t : list) {
-                        System.out.println(" " + i + "." + t);
-                        i++;
-                    }
-                }
-            } else if (input.startsWith("mark ")) {
-                int index = Integer.parseInt(input.split(" ")[1]) - 1;
-                try {
-                    if (index >= 0 && index < list.size()) {
-                        list.get(index).markAsDone();
-                        Zip.saveToFile(file);
-                        System.out.println(" Nice! I've marked this task as done:");
-                        System.out.println("  " + list.get(index));
-                    } else {
-                        throw new ZipException("Invalid index");
-                    }
-                } catch (ZipException e) {
-                    System.out.println(e.getMessage());
-                }
-            } else if (input.startsWith("unmark ")) {
-                int index = Integer.parseInt(input.split(" ")[1]) - 1;
-                try {
-                    if (index >= 0 && index < list.size()) {
-                        list.get(index).markAsUndone();
-                        Zip.saveToFile(file);
-                        System.out.println(" OK, I've marked this task as not done yet:");
-                        System.out.println("  " + list.get(index));
-                    } else {
-                        throw new ZipException("Invalid index");
-                    }
-                } catch (ZipException e) {
-                    System.out.println(e.getMessage());
-                }
-            } else if (input.startsWith("todo ")) {
-                try {
-                    String description = input.substring(5).trim();
-                    if (description.isEmpty()) {
-                        throw new ZipException("Nothing to add to list");
-                    }
-                    Task t = new ToDo(description);
-                    list.add(t);
-                    Zip.saveToFile(file);
+                ParsedCommand command = Parser.parse(input);
 
-                    System.out.println(" Got it. I've added this task:");
-                    System.out.println("  " + t);
-                    System.out.println(" Now you have " + list.size() + " tasks in the list.");
-                } catch (ZipException e) {
-                    System.out.println(e.getMessage());
-                }
-            } else if (input.startsWith("deadline ")) {
-                try {
-                    String content = input.substring(9).trim();
-                    if (content.isEmpty()) {
-                        throw new ZipException("Nothing to add to list");
-                    }
-                    String[] parts = content.split(" /by ", 2);
+                switch (command.type) {
+                case BYE:
+                    ui.showMessage(" Bye. Hope to see you again soon!");
+                    ui.showLine();
+                    ui.close();
+                    return;
 
-                    String description = parts[0];
-                    String by = parts[1];
+                case LIST:
+                    ui.showTasks(tasks);
+                    break;
 
-                    Task d = new Deadline(description, by);
-                    list.add(d);
-                    Zip.saveToFile(file);
-
-                    System.out.println(" Got it. I've added this task:");
-                    System.out.println("  " + d);
-                    System.out.println(" Now you have " + list.size() + " tasks in the list.");
-                } catch (ZipException e) {
-                    System.out.println(e.getMessage());
-                }
-            } else if (input.startsWith("event ")) {
-                try {
-                    String content = input.substring(6).trim();
-                    if (content.isEmpty()) {
-                        throw new ZipException("Nothing to add to list");
-                    }
-                    String[] firstSplit = content.split(" /from ", 2);
-
-                    String description = firstSplit[0];
-                    String[] secondSplit = firstSplit[1].split(" /to ", 2);
-
-                    String from = secondSplit[0];
-                    String to = secondSplit[1];
-
-                    Task e = new Event(description, from, to);
-                    list.add(e);
-                    Zip.saveToFile(file);
-
-                    System.out.println(" Got it. I've added this task:");
-                    System.out.println("  " + e);
-                    System.out.println(" Now you have " + list.size() + " tasks in the list.");
-                } catch (ZipException e) {
-                    System.out.println(e.getMessage());
-                }
-            } else if (input.startsWith("delete ")) {
-                try {
-                    int index = Integer.parseInt(input.split(" ")[1]) - 1;
-                    if (index >= 0 && index < list.size()) {
-                        System.out.println("Noted. I've removed this task:");
-                        System.out.println("  " + list.get(index));
-                        list.remove(index);
-                        Zip.saveToFile(file);
-                    } else {
-                        throw new ZipException("Invalid index");
-                    }
-                } catch (ZipException e) {
-                    System.out.println(e.getMessage());
+                case MARK: {
+                    int index = (int) command.args[0];
+                    checkIndex(index, tasks);
+                    tasks.get(index).markAsDone();
+                    storage.save(tasks);
+                    ui.showMessage(" Nice! I've marked this task as done:");
+                    ui.showMessage("  " + tasks.get(index));
+                    break;
                 }
 
-            } else {
-                System.out.println(" Sorry, I don't understand that command.");
+                case UNMARK: {
+                    int index = (int) command.args[0];
+                    checkIndex(index, tasks);
+                    tasks.get(index).markAsUndone();
+                    storage.save(tasks);
+                    ui.showMessage(" OK, I've marked this task as not done yet:");
+                    ui.showMessage("  " + tasks.get(index));
+                    break;
+                }
+
+                case TODO: {
+                    String desc = (String) command.args[0];
+                    Task t = new ToDo(desc);
+                    tasks.add(t);
+                    storage.save(tasks);
+                    ui.showMessage(" Got it. I've added this task:");
+                    ui.showMessage("  " + t);
+                    ui.showMessage(" Now you have " + tasks.size() + " tasks in the list.");
+                    break;
+                }
+
+                case DEADLINE: {
+                    String desc = (String) command.args[0];
+                    String by = (String) command.args[1];
+                    Task d = new Deadline(desc, by);
+                    tasks.add(d);
+                    storage.save(tasks);
+                    ui.showMessage(" Got it. I've added this task:");
+                    ui.showMessage("  " + d);
+                    ui.showMessage(" Now you have " + tasks.size() + " tasks in the list.");
+                    break;
+                }
+
+                case EVENT: {
+                    String desc = (String) command.args[0];
+                    String from = (String) command.args[1];
+                    String to = (String) command.args[2];
+                    Task e = new Event(desc, from, to);
+                    tasks.add(e);
+                    storage.save(tasks);
+                    ui.showMessage(" Got it. I've added this task:");
+                    ui.showMessage("  " + e);
+                    ui.showMessage(" Now you have " + tasks.size() + " tasks in the list.");
+                    break;
+                }
+
+                case DELETE: {
+                    int index = (int) command.args[0];
+                    checkIndex(index, tasks);
+                    ui.showMessage(" Noted. I've removed this task:");
+                    ui.showMessage("  " + tasks.get(index));
+                    tasks.remove(index);
+                    storage.save(tasks);
+                    break;
+                }
+
+                default:
+                    ui.showMessage(" Sorry, I don't understand that command.");
+
+                }
+
+            } catch (ZipException e) {
+                ui.showMessage(e.getMessage());
             }
 
-            printLine();
-        }
-
-        scanner.close();
-    }
-
-    private static void printLine() {
-        System.out.println("____________________________________________________________");
-    }
-
-    private static void loadFileContent(File file) throws ZipException {
-        try {
-            if (!file.exists()) {
-                file.getParentFile().mkdirs();
-                file.createNewFile();
-                return;
-            }
-
-            Scanner fileScanner = new Scanner(file);
-            while (fileScanner.hasNextLine()) {
-                String line = fileScanner.nextLine();
-                String[] parts = line.split("\\|");
-
-                Task task = null;
-                boolean isDone = parts[1].equals("1");
-
-                switch (parts[0]) {
-                    case "Todo":
-                        task = new ToDo(parts[2]);
-                        break;
-                    case "Deadline":
-                        task = new Deadline(parts[2], parts[3]);
-                        break;
-                    case "Event":
-                        task = new Event(parts[2], parts[3], parts[4]);
-                }
-
-                if (task != null) {
-                    if (isDone) {
-                        task.markAsDone();
-                    }
-                    list.add(task);
-                }
-            }
-            fileScanner.close();
-        } catch (IOException e) {
-            throw new ZipException(e.getMessage());
+            ui.showLine();
         }
     }
 
-    private static void saveToFile(File file) throws ZipException {
-        try {
-            FileWriter fw = new FileWriter(file);
-            for (Task t : list) {
-                fw.write(t.toFileString() + System.lineSeparator());
-            }
-            fw.close();
-        } catch (IOException e) {
-            throw new ZipException(e.getMessage());
+    private static void checkIndex(int index, TaskList tasks) throws ZipException {
+        if (index < 0 || index >= tasks.size()) {
+            throw new ZipException("Invalid task number");
         }
     }
-
 }
