@@ -7,12 +7,11 @@ import java.io.File;
 
 public class Zip {
 
-    private static List<Task> list = new ArrayList<>();
+    private static TaskList tasks = new TaskList();
 
     public static void main(String[] args) throws ZipException {
 
         File file = new File("textfiles/tasks.txt");
-        System.out.println("Reading file: " + file.getAbsolutePath());
         Zip.loadFileContent(file);
 
         Scanner scanner = new Scanner(System.in);
@@ -31,12 +30,12 @@ public class Zip {
                 printLine();
                 break;
             } else if (input.equalsIgnoreCase("list")) {
-                if (list.isEmpty()) {
+                if (tasks.isEmpty()) {
                     System.out.println("There are no tasks in the list");
                 } else {
                     System.out.println(" Here are the tasks in your list:");
                     int i = 1;
-                    for (Task t : list) {
+                    for (Task t : tasks.getTasks()) {
                         System.out.println(" " + i + "." + t);
                         i++;
                     }
@@ -44,11 +43,11 @@ public class Zip {
             } else if (input.startsWith("mark ")) {
                 int index = Integer.parseInt(input.split(" ")[1]) - 1;
                 try {
-                    if (index >= 0 && index < list.size()) {
-                        list.get(index).markAsDone();
+                    if (index >= 0 && index < tasks.size()) {
+                        tasks.get(index).markAsDone();
                         Zip.saveToFile(file);
                         System.out.println(" Nice! I've marked this task as done:");
-                        System.out.println("  " + list.get(index));
+                        System.out.println("  " + tasks.get(index));
                     } else {
                         throw new ZipException("Invalid index");
                     }
@@ -58,11 +57,11 @@ public class Zip {
             } else if (input.startsWith("unmark ")) {
                 int index = Integer.parseInt(input.split(" ")[1]) - 1;
                 try {
-                    if (index >= 0 && index < list.size()) {
-                        list.get(index).markAsUndone();
+                    if (index >= 0 && index < tasks.size()) {
+                        tasks.get(index).markAsUndone();
                         Zip.saveToFile(file);
                         System.out.println(" OK, I've marked this task as not done yet:");
-                        System.out.println("  " + list.get(index));
+                        System.out.println("  " + tasks.get(index));
                     } else {
                         throw new ZipException("Invalid index");
                     }
@@ -76,12 +75,12 @@ public class Zip {
                         throw new ZipException("Nothing to add to list");
                     }
                     Task t = new ToDo(description);
-                    list.add(t);
+                    tasks.add(t);
                     Zip.saveToFile(file);
 
                     System.out.println(" Got it. I've added this task:");
                     System.out.println("  " + t);
-                    System.out.println(" Now you have " + list.size() + " tasks in the list.");
+                    System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
                 } catch (ZipException e) {
                     System.out.println(e.getMessage());
                 }
@@ -97,12 +96,12 @@ public class Zip {
                     String by = parts[1];
 
                     Task d = new Deadline(description, by);
-                    list.add(d);
+                    tasks.add(d);
                     Zip.saveToFile(file);
 
                     System.out.println(" Got it. I've added this task:");
                     System.out.println("  " + d);
-                    System.out.println(" Now you have " + list.size() + " tasks in the list.");
+                    System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
                 } catch (ZipException e) {
                     System.out.println(e.getMessage());
                 }
@@ -121,22 +120,22 @@ public class Zip {
                     String to = secondSplit[1];
 
                     Task e = new Event(description, from, to);
-                    list.add(e);
+                    tasks.add(e);
                     Zip.saveToFile(file);
 
                     System.out.println(" Got it. I've added this task:");
                     System.out.println("  " + e);
-                    System.out.println(" Now you have " + list.size() + " tasks in the list.");
+                    System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
                 } catch (ZipException e) {
                     System.out.println(e.getMessage());
                 }
             } else if (input.startsWith("delete ")) {
                 try {
                     int index = Integer.parseInt(input.split(" ")[1]) - 1;
-                    if (index >= 0 && index < list.size()) {
+                    if (index >= 0 && index < tasks.size()) {
                         System.out.println("Noted. I've removed this task:");
-                        System.out.println("  " + list.get(index));
-                        list.remove(index);
+                        System.out.println("  " + tasks.get(index));
+                        tasks.remove(index);
                         Zip.saveToFile(file);
                     } else {
                         throw new ZipException("Invalid index");
@@ -190,7 +189,7 @@ public class Zip {
                     if (isDone) {
                         task.markAsDone();
                     }
-                    list.add(task);
+                    tasks.add(task);
                 }
             }
             fileScanner.close();
@@ -202,7 +201,7 @@ public class Zip {
     private static void saveToFile(File file) throws ZipException {
         try {
             FileWriter fw = new FileWriter(file);
-            for (Task t : list) {
+            for (Task t : tasks.getTasks()) {
                 fw.write(t.toFileString() + System.lineSeparator());
             }
             fw.close();
