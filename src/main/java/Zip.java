@@ -11,29 +11,26 @@ public class Zip {
         Storage storage = new Storage("textfiles/tasks.txt");
         tasks = storage.load();
 
-        Scanner scanner = new Scanner(System.in);
+        Ui ui = new Ui();
 
-        printLine();
-        System.out.println(" Hello! I'm Zip");
-        System.out.println(" What can I do for you?");
-        printLine();
+        ui.showWelcome();
 
         while (true) {
-            String input = scanner.nextLine();
-            printLine();
+            String input = ui.readCommand();
+            ui.showLine();
 
             if (input.equalsIgnoreCase("bye")) {
-                System.out.println(" Bye. Hope to see you again soon!");
-                printLine();
+                ui.showMessage(" Bye. Hope to see you again soon!");
+                ui.showLine();
                 break;
             } else if (input.equalsIgnoreCase("list")) {
                 if (tasks.isEmpty()) {
-                    System.out.println("There are no tasks in the list");
+                    ui.showMessage("There are no tasks in the list");
                 } else {
-                    System.out.println(" Here are the tasks in your list:");
+                    ui.showMessage(" Here are the tasks in your list:");
                     int i = 1;
                     for (Task t : tasks.getTasks()) {
-                        System.out.println(" " + i + "." + t);
+                        ui.showMessage(" " + i + "." + t);
                         i++;
                     }
                 }
@@ -43,13 +40,13 @@ public class Zip {
                     if (index >= 0 && index < tasks.size()) {
                         tasks.get(index).markAsDone();
                         storage.save(tasks);
-                        System.out.println(" Nice! I've marked this task as done:");
-                        System.out.println("  " + tasks.get(index));
+                        ui.showMessage(" Nice! I've marked this task as done:");
+                        ui.showMessage("  " + tasks.get(index));
                     } else {
                         throw new ZipException("Invalid index");
                     }
                 } catch (ZipException e) {
-                    System.out.println(e.getMessage());
+                    ui.showMessage(e.getMessage());
                 }
             } else if (input.startsWith("unmark ")) {
                 int index = Integer.parseInt(input.split(" ")[1]) - 1;
@@ -57,13 +54,13 @@ public class Zip {
                     if (index >= 0 && index < tasks.size()) {
                         tasks.get(index).markAsUndone();
                         storage.save(tasks);
-                        System.out.println(" OK, I've marked this task as not done yet:");
-                        System.out.println("  " + tasks.get(index));
+                        ui.showMessage(" OK, I've marked this task as not done yet:");
+                        ui.showMessage("  " + tasks.get(index));
                     } else {
                         throw new ZipException("Invalid index");
                     }
                 } catch (ZipException e) {
-                    System.out.println(e.getMessage());
+                    ui.showMessage(e.getMessage());
                 }
             } else if (input.startsWith("todo ")) {
                 try {
@@ -74,11 +71,11 @@ public class Zip {
                     Task t = new ToDo(description);
                     tasks.add(t);
                     storage.save(tasks);
-                    System.out.println(" Got it. I've added this task:");
-                    System.out.println("  " + t);
-                    System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
+                    ui.showMessage(" Got it. I've added this task:");
+                    ui.showMessage("  " + t);
+                    ui.showMessage(" Now you have " + tasks.size() + " tasks in the list.");
                 } catch (ZipException e) {
-                    System.out.println(e.getMessage());
+                    ui.showMessage(e.getMessage());
                 }
             } else if (input.startsWith("deadline ")) {
                 try {
@@ -95,11 +92,11 @@ public class Zip {
                     tasks.add(d);
                     storage.save(tasks);
 
-                    System.out.println(" Got it. I've added this task:");
-                    System.out.println("  " + d);
-                    System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
+                    ui.showMessage(" Got it. I've added this task:");
+                    ui.showMessage("  " + d);
+                    ui.showMessage(" Now you have " + tasks.size() + " tasks in the list.");
                 } catch (ZipException e) {
-                    System.out.println(e.getMessage());
+                    ui.showMessage(e.getMessage());
                 }
             } else if (input.startsWith("event ")) {
                 try {
@@ -119,35 +116,34 @@ public class Zip {
                     tasks.add(e);
                     storage.save(tasks);
 
-                    System.out.println(" Got it. I've added this task:");
-                    System.out.println("  " + e);
-                    System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
+                    ui.showMessage(" Got it. I've added this task:");
+                    ui.showMessage("  " + e);
+                    ui.showMessage(" Now you have " + tasks.size() + " tasks in the list.");
                 } catch (ZipException e) {
-                    System.out.println(e.getMessage());
+                    ui.showMessage(e.getMessage());
                 }
             } else if (input.startsWith("delete ")) {
                 try {
                     int index = Integer.parseInt(input.split(" ")[1]) - 1;
                     if (index >= 0 && index < tasks.size()) {
-                        System.out.println("Noted. I've removed this task:");
-                        System.out.println("  " + tasks.get(index));
+                        ui.showMessage("Noted. I've removed this task:");
+                        ui.showMessage("  " + tasks.get(index));
                         tasks.remove(index);
                         storage.save(tasks);
                     } else {
                         throw new ZipException("Invalid index");
                     }
                 } catch (ZipException e) {
-                    System.out.println(e.getMessage());
+                    ui.showMessage(e.getMessage());
                 }
 
             } else {
-                System.out.println(" Sorry, I don't understand that command.");
+                ui.showMessage(" Sorry, I don't understand that command.");
             }
 
             printLine();
         }
-
-        scanner.close();
+        ui.close();
     }
 
     private static void printLine() {
