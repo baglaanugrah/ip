@@ -1,3 +1,5 @@
+package duke;
+
 import java.util.Scanner;
 
 public class Ui {
@@ -5,7 +7,7 @@ public class Ui {
 
     public void showWelcome() {
         printLine();
-        System.out.println(" Hello! I'm Zip");
+        System.out.println(" Hello! I'm duke.Zip");
         System.out.println(" What can I do for you?");
         printLine();
     }

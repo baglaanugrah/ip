@@ -1,3 +1,5 @@
+package duke;
+
 public class Task {
     protected String description;
     protected boolean isDone;
@@ -20,7 +22,7 @@ public class Task {
     }
 
     public String toFileString() {
-        return "Task" + "|" + (isDone ? "1" : "0") + "|" + description;
+        return "duke.Task" + "|" + (isDone ? "1" : "0") + "|" + description;
     }
 
     public static Task fromFileString(String fileString) {
@@ -33,10 +35,10 @@ public class Task {
             case "Todo":
                 task = new ToDo(parts[2]);
                 break;
-            case "Deadline":
+            case "duke.Deadline":
                 task = new Deadline(parts[2], parts[3]);
                 break;
-            case "Event":
+            case "duke.Event":
                 task = new Event(parts[2], parts[3], parts[4]);
         }
 

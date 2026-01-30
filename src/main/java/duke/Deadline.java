@@ -1,3 +1,5 @@
+package duke;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -11,7 +13,7 @@ public class Deadline extends Task {
 
     @Override
     public String toFileString() {
-        return "Deadline" + "|" + (isDone ? "1" : "0")
+        return "duke.Deadline" + "|" + (isDone ? "1" : "0")
                 + "|" + description + "|" + by;
     }
 

@@ -1,3 +1,5 @@
+package duke;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -13,7 +15,7 @@ public class Event extends Task {
 
     @Override
     public String toFileString() {
-        return "Event" + "|" + (isDone ? "1" : "0") + "|" + description + "|" + from + "|" + to;
+        return "duke.Event" + "|" + (isDone ? "1" : "0") + "|" + description + "|" + from + "|" + to;
     }
 
     @Override
