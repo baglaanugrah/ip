@@ -1,18 +1,15 @@
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
-import java.io.File;
 
 public class Zip {
 
-    private static TaskList tasks = new TaskList();
+
 
     public static void main(String[] args) throws ZipException {
 
-        File file = new File("textfiles/tasks.txt");
-        Zip.loadFileContent(file);
+        TaskList tasks;
+
+        Storage storage = new Storage("textfiles/tasks.txt");
+        tasks = storage.load();
 
         Scanner scanner = new Scanner(System.in);
 
@@ -45,7 +42,7 @@ public class Zip {
                 try {
                     if (index >= 0 && index < tasks.size()) {
                         tasks.get(index).markAsDone();
-                        Zip.saveToFile(file);
+                        storage.save(tasks);
                         System.out.println(" Nice! I've marked this task as done:");
                         System.out.println("  " + tasks.get(index));
                     } else {
@@ -59,7 +56,7 @@ public class Zip {
                 try {
                     if (index >= 0 && index < tasks.size()) {
                         tasks.get(index).markAsUndone();
-                        Zip.saveToFile(file);
+                        storage.save(tasks);
                         System.out.println(" OK, I've marked this task as not done yet:");
                         System.out.println("  " + tasks.get(index));
                     } else {
@@ -76,8 +73,7 @@ public class Zip {
                     }
                     Task t = new ToDo(description);
                     tasks.add(t);
-                    Zip.saveToFile(file);
-
+                    storage.save(tasks);
                     System.out.println(" Got it. I've added this task:");
                     System.out.println("  " + t);
                     System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
@@ -97,7 +93,7 @@ public class Zip {
 
                     Task d = new Deadline(description, by);
                     tasks.add(d);
-                    Zip.saveToFile(file);
+                    storage.save(tasks);
 
                     System.out.println(" Got it. I've added this task:");
                     System.out.println("  " + d);
@@ -121,7 +117,7 @@ public class Zip {
 
                     Task e = new Event(description, from, to);
                     tasks.add(e);
-                    Zip.saveToFile(file);
+                    storage.save(tasks);
 
                     System.out.println(" Got it. I've added this task:");
                     System.out.println("  " + e);
@@ -136,7 +132,7 @@ public class Zip {
                         System.out.println("Noted. I've removed this task:");
                         System.out.println("  " + tasks.get(index));
                         tasks.remove(index);
-                        Zip.saveToFile(file);
+                        storage.save(tasks);
                     } else {
                         throw new ZipException("Invalid index");
                     }
@@ -156,58 +152,6 @@ public class Zip {
 
     private static void printLine() {
         System.out.println("____________________________________________________________");
-    }
-
-    private static void loadFileContent(File file) throws ZipException {
-        try {
-            if (!file.exists()) {
-                file.getParentFile().mkdirs();
-                file.createNewFile();
-                return;
-            }
-
-            Scanner fileScanner = new Scanner(file);
-            while (fileScanner.hasNextLine()) {
-                String line = fileScanner.nextLine();
-                String[] parts = line.split("\\|");
-
-                Task task = null;
-                boolean isDone = parts[1].equals("1");
-
-                switch (parts[0]) {
-                    case "Todo":
-                        task = new ToDo(parts[2]);
-                        break;
-                    case "Deadline":
-                        task = new Deadline(parts[2], parts[3]);
-                        break;
-                    case "Event":
-                        task = new Event(parts[2], parts[3], parts[4]);
-                }
-
-                if (task != null) {
-                    if (isDone) {
-                        task.markAsDone();
-                    }
-                    tasks.add(task);
-                }
-            }
-            fileScanner.close();
-        } catch (IOException e) {
-            throw new ZipException(e.getMessage());
-        }
-    }
-
-    private static void saveToFile(File file) throws ZipException {
-        try {
-            FileWriter fw = new FileWriter(file);
-            for (Task t : tasks.getTasks()) {
-                fw.write(t.toFileString() + System.lineSeparator());
-            }
-            fw.close();
-        } catch (IOException e) {
-            throw new ZipException(e.getMessage());
-        }
     }
 
 }
