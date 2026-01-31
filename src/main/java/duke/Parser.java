@@ -1,7 +1,17 @@
 package duke;
 
+/**
+ * Parses user input into executable commands.
+ */
 public class Parser {
 
+    /**
+     * Parses the user input and returns a corresponding ParsedCommand.
+     *
+     * @param input Raw user input
+     * @return ParsedCommand representing the input
+     * @throws ZipException If the input format is invalid or unrecognized
+     */
     public static ParsedCommand parse(String input) throws ZipException {
         if (input.equalsIgnoreCase("bye")) {
             return new ParsedCommand(CommandType.BYE);
@@ -23,7 +33,9 @@ public class Parser {
 
         if (input.startsWith("todo ")) {
             String desc = input.substring(5).trim();
-            if (desc.isEmpty()) throw new ZipException("Nothing to add to list");
+            if (desc.isEmpty()) {
+                throw new ZipException("Nothing to add to list");
+            }
             return new ParsedCommand(CommandType.TODO, desc);
         }
 
