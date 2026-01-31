@@ -54,6 +54,14 @@ public class Parser {
             return new ParsedCommand(CommandType.DELETE, index);
         }
 
+        if (input.startsWith("find ")) {
+            String keyword = input.substring(5).trim();
+            if (keyword.isEmpty()) {
+                throw new ZipException("Nothing to find");
+            }
+            return new ParsedCommand(CommandType.FIND, keyword);
+        }
+
         throw new ZipException("Sorry, I don't understand that command.");
     }
 }
