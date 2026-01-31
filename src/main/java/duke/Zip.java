@@ -106,6 +106,13 @@ public class Zip {
         }
     }
 
+    /**
+     * Checks if the input index is valid.
+     *
+     * @param index Input index
+     * @param tasks Task list
+     * @throws ZipException if the index is less than 0 or more than or equal to the list size
+     */
     private static void checkIndex(int index, TaskList tasks) throws ZipException {
         if (index < 0 || index >= tasks.size()) {
             throw new ZipException("Invalid task number");
