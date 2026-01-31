@@ -93,6 +93,13 @@ public class Zip {
                     break;
                 }
 
+                case FIND: {
+                    String keyword = (String) command.args[0];
+                    TaskList list = tasks.findTask(keyword);
+                    ui.showTasks(list);
+                    break;
+                }
+
                 default:
                     ui.showMessage(" Sorry, I don't understand that command.");
 

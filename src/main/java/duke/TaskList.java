@@ -72,4 +72,26 @@ public class TaskList {
     public List<Task> getTasks() {
         return tasks;
     }
+
+
+    /**
+     * Returns the list of tasks whose description contain the keyword.
+     *
+     * @param keyword word to find
+     * @return list of tasks
+     */
+    public TaskList findTask(String keyword) {
+        TaskList result = new TaskList();
+
+        String lowerKeyword = keyword.toLowerCase();
+
+        for (Task task : tasks) {
+            if (task.description.toLowerCase().contains(lowerKeyword)) {
+                result.add(task);
+            }
+        }
+
+        return result;
+    }
+
 }
