@@ -1,78 +1,54 @@
 package duke;
 
-import java.util.Scanner;
 
 /**
  * Handles user interaction and display.
  */
 public class Ui {
-    private final Scanner scanner = new Scanner(System.in);
-
+    private static final String LINE =
+            "____________________________________________________________";
     /**
      * Displays the welcome message.
-     */
-    public void showWelcome() {
-        printLine();
-        System.out.println(" Hello! I'm duke.Zip");
-        System.out.println(" What can I do for you?");
-        printLine();
-    }
-
-    /**
-     * Reads a command from the user.
      *
-     * @return User input
+     * @return the welcome message
      */
-    public String readCommand() {
-        return scanner.nextLine();
-    }
-
-    /**
-     * Displays a separator line.
-     */
-    public void showLine() {
-        printLine();
+    public String showWelcome() {
+        return LINE + "\n"
+                + " Hello! I'm duke.Zip\n"
+                + " What can I do for you?\n"
+                + LINE;
     }
 
     /**
      * Displays a message to the user.
      *
      * @param message Message to display
+     * @return the message
      */
-    public void showMessage(String message) {
-        System.out.println(message);
+    public String showMessage(String message) {
+        return message;
     }
 
     /**
      * Displays all tasks in the list.
      *
-     * @param taskList TaskList to display
+     * @param taskList TaskList to display\
+     * @return the formatted Tasklist
      */
-    public void showTasks(TaskList taskList) {
+    public String showTasks(TaskList taskList) {
         if (taskList.isEmpty()) {
-            System.out.println("There are no tasks in the list");
-            return;
+            return "There are no tasks in the list";
         }
 
-        System.out.println(" Here are the tasks in your list:");
+        StringBuilder sb = new StringBuilder();
+        sb.append(" Here are the tasks in your list:\n");
+
         int i = 1;
         for (Task t : taskList.getTasks()) {
-            System.out.println(" " + i + "." + t);
+            sb.append(" ").append(i).append(".").append(t).append("\n");
             i++;
         }
-    }
 
-    /**
-     * Prints a horizontal separator line.
-     */
-    private void printLine() {
-        System.out.println("____________________________________________________________");
-    }
-
-    /**
-     * Closes input resources.
-     */
-    public void close() {
-        scanner.close();
+        return sb.toString().trim();
     }
 }

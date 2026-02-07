@@ -5,115 +5,127 @@ package duke;
  */
 public class Zip {
 
-    public static void main(String[] args) {
-        Storage storage = new Storage("textfiles/tasks.txt");
-        TaskList tasks = storage.load();
-        Ui ui = new Ui();
+    private final Storage storage;
+    private final TaskList tasks;
+    private final Ui ui;
 
-        ui.showWelcome();
+    public Zip() {
+        this.storage = new Storage("textfiles/tasks.txt");
+        this.tasks = storage.load();
+        this.ui = new Ui();
+    }
 
-        while (true) {
-            try {
-                String input = ui.readCommand();
-                ui.showLine();
+    public String getWelcomeMessage() {
+        return ui.showWelcome();
+    }
 
-                ParsedCommand command = Parser.parse(input);
+    public String getResponse(String input) {
+        StringBuilder response = new StringBuilder();
 
-                switch (command.type) {
-                case BYE:
-                    ui.showMessage(" Bye. Hope to see you again soon!");
-                    ui.showLine();
-                    ui.close();
-                    return;
+        try {
+            ParsedCommand command = Parser.parse(input);
 
-                case LIST:
-                    ui.showTasks(tasks);
-                    break;
+            switch (command.type) {
+            case BYE:
+                response.append(ui.showMessage(" Bye. Hope to see you again soon!"));
+                break;
 
-                case MARK: {
-                    int index = (int) command.args[0];
-                    checkIndex(index, tasks);
-                    tasks.get(index).markAsDone();
-                    storage.save(tasks);
-                    ui.showMessage(" Nice! I've marked this task as done:");
-                    ui.showMessage("  " + tasks.get(index));
-                    break;
-                }
+            case LIST:
+                response.append(ui.showTasks(tasks));
+                break;
 
-                case UNMARK: {
-                    int index = (int) command.args[0];
-                    checkIndex(index, tasks);
-                    tasks.get(index).markAsUndone();
-                    storage.save(tasks);
-                    ui.showMessage(" OK, I've marked this task as not done yet:");
-                    ui.showMessage("  " + tasks.get(index));
-                    break;
-                }
+            case MARK: {
+                int index = (int) command.args[0];
+                checkIndex(index, tasks);
+                tasks.get(index).markAsDone();
+                storage.save(tasks);
 
-                case TODO: {
-                    String desc = (String) command.args[0];
-                    Task t = new ToDo(desc);
-                    tasks.add(t);
-                    storage.save(tasks);
-                    ui.showMessage(" Got it. I've added this task:");
-                    ui.showMessage("  " + t);
-                    ui.showMessage(" Now you have " + tasks.size() + " tasks in the list.");
-                    break;
-                }
-
-                case DEADLINE: {
-                    String desc = (String) command.args[0];
-                    String by = (String) command.args[1];
-                    Task d = new Deadline(desc, by);
-                    tasks.add(d);
-                    storage.save(tasks);
-                    ui.showMessage(" Got it. I've added this task:");
-                    ui.showMessage("  " + d);
-                    ui.showMessage(" Now you have " + tasks.size() + " tasks in the list.");
-                    break;
-                }
-
-                case EVENT: {
-                    String desc = (String) command.args[0];
-                    String from = (String) command.args[1];
-                    String to = (String) command.args[2];
-                    Task e = new Event(desc, from, to);
-                    tasks.add(e);
-                    storage.save(tasks);
-                    ui.showMessage(" Got it. I've added this task:");
-                    ui.showMessage("  " + e);
-                    ui.showMessage(" Now you have " + tasks.size() + " tasks in the list.");
-                    break;
-                }
-
-                case DELETE: {
-                    int index = (int) command.args[0];
-                    checkIndex(index, tasks);
-                    ui.showMessage(" Noted. I've removed this task:");
-                    ui.showMessage("  " + tasks.get(index));
-                    tasks.remove(index);
-                    storage.save(tasks);
-                    break;
-                }
-
-                case FIND: {
-                    String keyword = (String) command.args[0];
-                    TaskList list = tasks.findTask(keyword);
-                    ui.showTasks(list);
-                    break;
-                }
-
-                default:
-                    ui.showMessage(" Sorry, I don't understand that command.");
-
-                }
-
-            } catch (ZipException e) {
-                ui.showMessage(e.getMessage());
+                response.append(" Nice! I've marked this task as done:\n");
+                response.append("  ").append(tasks.get(index));
+                break;
             }
 
-            ui.showLine();
+            case UNMARK: {
+                int index = (int) command.args[0];
+                checkIndex(index, tasks);
+                tasks.get(index).markAsUndone();
+                storage.save(tasks);
+
+                response.append(" OK, I've marked this task as not done yet:\n");
+                response.append("  ").append(tasks.get(index));
+                break;
+            }
+
+            case TODO: {
+                String desc = (String) command.args[0];
+                Task t = new ToDo(desc);
+                tasks.add(t);
+                storage.save(tasks);
+
+                response.append(" Got it. I've added this task:\n");
+                response.append("  ").append(t).append("\n");
+                response.append(" Now you have ").append(tasks.size())
+                        .append(" tasks in the list.");
+                break;
+            }
+
+            case DEADLINE: {
+                String desc = (String) command.args[0];
+                String by = (String) command.args[1];
+                Task d = new Deadline(desc, by);
+                tasks.add(d);
+                storage.save(tasks);
+
+                response.append(" Got it. I've added this task:\n");
+                response.append("  ").append(d).append("\n");
+                response.append(" Now you have ").append(tasks.size())
+                        .append(" tasks in the list.");
+                break;
+            }
+
+            case EVENT: {
+                String desc = (String) command.args[0];
+                String from = (String) command.args[1];
+                String to = (String) command.args[2];
+                Task e = new Event(desc, from, to);
+                tasks.add(e);
+                storage.save(tasks);
+
+                response.append(" Got it. I've added this task:\n");
+                response.append("  ").append(e).append("\n");
+                response.append(" Now you have ").append(tasks.size())
+                        .append(" tasks in the list.");
+                break;
+            }
+
+            case DELETE: {
+                int index = (int) command.args[0];
+                checkIndex(index, tasks);
+
+                response.append(" Noted. I've removed this task:\n");
+                response.append("  ").append(tasks.get(index));
+
+                tasks.remove(index);
+                storage.save(tasks);
+                break;
+            }
+
+            case FIND: {
+                String keyword = (String) command.args[0];
+                TaskList list = tasks.findTask(keyword);
+                response.append(ui.showTasks(list));
+                break;
+            }
+
+            default:
+                response.append(" Sorry, I don't understand that command.");
+            }
+
+        } catch (ZipException e) {
+            response.append(e.getMessage());
         }
+
+        return response.toString();
     }
 
     /**
