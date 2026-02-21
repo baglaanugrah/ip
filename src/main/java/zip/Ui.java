@@ -1,6 +1,8 @@
 package zip;
 
 
+import java.util.List;
+
 /**
  * Handles user interaction and display.
  */
@@ -59,7 +61,8 @@ public class Ui {
      * @return the string representation of the upcoming deadline tasks
      */
     public String showDeadlines(TaskList taskList) {
-        if (taskList.isEmpty()) {
+        List<Task> deadlines = taskList.getDeadlines();
+        if (deadlines.isEmpty()) {
             return "There are no upcoming deadlines";
         }
 

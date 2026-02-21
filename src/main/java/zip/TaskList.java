@@ -78,6 +78,7 @@ public class TaskList {
     public List<Task> getDeadlines() {
         return tasks.stream()
                 .filter(task -> task.getDeadlineDate().isPresent())
+                .filter(task -> !task.isDone())
                 .sorted(Comparator.comparing(task -> task.getDeadlineDate().get()))
                 .toList();
     }

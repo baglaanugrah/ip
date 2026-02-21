@@ -44,6 +44,15 @@ public class Task {
     }
 
     /**
+     * Returns the status of the task.
+     *
+     * @return true if the task is marked as done otherwise false
+     */
+    public boolean isDone() {
+        return isDone;
+    }
+
+    /**
      * Returns the string representation used for file storage.
      *
      * @return Formatted file string
