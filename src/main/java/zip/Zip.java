@@ -37,6 +37,10 @@ public class Zip {
                 response.append(ui.showTasks(tasks));
                 break;
 
+            case DUE:
+                response.append(ui.showDeadlines(tasks));
+                break;
+
             case MARK: {
                 int index = (int) command.args[0];
                 checkIndex(index, tasks);

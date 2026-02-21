@@ -2,6 +2,7 @@ package zip;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 /**
  * Represents a task with a due date.
@@ -18,6 +19,16 @@ public class Deadline extends Task {
     public Deadline(String description, String by) {
         super(description);
         this.by = LocalDate.parse(by, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    }
+
+    /**
+     * Returns the date of the deadline task
+     *
+     * @return Optional instance of the date of the deadline
+     */
+    @Override
+    public Optional<LocalDate> getDeadlineDate() {
+        return Optional.of(this.by);
     }
 
     /**

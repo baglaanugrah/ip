@@ -21,6 +21,10 @@ public class Parser {
             return new ParsedCommand(CommandType.LIST);
         }
 
+        if (input.equalsIgnoreCase("due")) {
+            return new ParsedCommand(CommandType.DUE);
+        }
+
         if (input.startsWith("mark ")) {
             int index = Integer.parseInt(input.split(" ")[1]) - 1;
             assert index >= 0 : "index should be greater than or equal to zero";

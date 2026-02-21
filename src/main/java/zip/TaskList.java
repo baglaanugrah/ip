@@ -1,6 +1,7 @@
 package zip;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -72,6 +73,14 @@ public class TaskList {
      */
     public List<Task> getTasks() {
         return tasks;
+    }
+
+    public List<Task> getDeadlines() {
+        return tasks.stream()
+                .filter(task -> task.getDeadlineDate().isPresent())
+                .filter(task -> !task.isDone())
+                .sorted(Comparator.comparing(task -> task.getDeadlineDate().get()))
+                .toList();
     }
 
 
