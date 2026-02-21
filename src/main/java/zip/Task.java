@@ -1,5 +1,8 @@
 package zip;
 
+import java.time.LocalDate;
+import java.util.Optional;
+
 /**
  * Represents a generic task.
  */
@@ -47,6 +50,15 @@ public class Task {
      */
     public String toFileString() {
         return "duke.Task" + "|" + (isDone ? "1" : "0") + "|" + description;
+    }
+
+    /**
+     * Returns an optional instance of empty
+     *
+     * @return an empty deadline
+     */
+    public Optional<LocalDate> getDeadlineDate() {
+        return Optional.empty();
     }
 
     /**

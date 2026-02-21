@@ -51,4 +51,27 @@ public class Ui {
 
         return sb.toString().trim();
     }
+
+    /**
+     * Returns the upcoming deadline tasks
+     *
+     * @param taskList current Tasklist
+     * @return the string representation of the upcoming deadline tasks
+     */
+    public String showDeadlines(TaskList taskList) {
+        if (taskList.isEmpty()) {
+            return "There are no upcoming deadlines";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(" Here are the upcoming deadlines sorted in chronological order:\n");
+
+        int i = 1;
+        for (Task t : taskList.getDeadlines()) {
+            sb.append(" ").append(i).append(".").append(t).append("\n");
+            i++;
+        }
+
+        return sb.toString().trim();
+    }
 }
