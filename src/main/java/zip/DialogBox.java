@@ -49,12 +49,15 @@ public class DialogBox extends HBox {
     }
 
     public static DialogBox getUserDialog(String text, Image img) {
-        return new DialogBox(text, img);
+        var db = new DialogBox(text, img);
+        db.dialog.getStyleClass().add("user-bubble");
+        return db;
     }
 
     public static DialogBox getZipDialog(String text, Image img) {
         var db = new DialogBox(text, img);
         db.flip();
+        db.dialog.getStyleClass().add("bot-bubble");
         return db;
     }
 }
