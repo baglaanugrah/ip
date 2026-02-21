@@ -52,6 +52,8 @@ public class Storage {
      * @throws ZipException If an I/O error occurs
      */
     public void save(TaskList taskList) throws ZipException {
+        //creates a directory if one does not exist already
+        //creates a writer object to insert text into the file
         try {
             file.getParentFile().mkdirs();
             try (FileWriter fw = new FileWriter(file)) {
