@@ -16,7 +16,7 @@ public class Ui {
      */
     public String showWelcome() {
         return LINE + "\n"
-                + " Hello! I'm duke.Zip\n"
+                + " Hello! I'm Zip\n"
                 + " What can I do for you?\n"
                 + LINE;
     }

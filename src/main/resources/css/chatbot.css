@@ -126,3 +126,14 @@
     -fx-text-fill: -color-text-primary;
     -fx-background-radius: 16 16 16 4;
 }
+
+.header-label {
+    -fx-background-color: -color-bg-raised;
+    -fx-text-fill: -color-text-primary;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+    -fx-border-color: transparent transparent -color-border transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
