@@ -1,9 +1,15 @@
 package zip;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
 /**
  * Parses user input into executable commands.
  */
 public class Parser {
+
+    private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     /**
      * Parses the user input and returns a corresponding ParsedCommand.
@@ -26,15 +32,21 @@ public class Parser {
         }
 
         if (input.startsWith("mark ")) {
-            int index = Integer.parseInt(input.split(" ")[1]) - 1;
-            assert index >= 0 : "index should be greater than or equal to zero";
-            return new ParsedCommand(CommandType.MARK, index);
+            try {
+                int index = Integer.parseInt(input.split(" ")[1]) - 1;
+                return new ParsedCommand(CommandType.MARK, index);
+            } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+                throw new ZipException("Invalid Input");
+            }
         }
 
         if (input.startsWith("unmark ")) {
-            int index = Integer.parseInt(input.split(" ")[1]) - 1;
-            assert index >= 0 : "index should be greater than or equal to zero";
-            return new ParsedCommand(CommandType.UNMARK, index);
+            try {
+                int index = Integer.parseInt(input.split(" ")[1]) - 1;
+                return new ParsedCommand(CommandType.UNMARK, index);
+            } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+                throw new ZipException("Invalid Input");
+            }
         }
 
         if (input.startsWith("todo ")) {
@@ -46,21 +58,43 @@ public class Parser {
         }
 
         if (input.startsWith("deadline ")) {
-            String[] parts = input.substring(9).split(" /by ", 2);
-            assert parts.length == 2 : "invalid deadline command";
-            return new ParsedCommand(CommandType.DEADLINE, parts[0], parts[1]);
+            try {
+                String[] parts = input.substring(9).split(" /by ", 2);
+                if (parts.length != 2) {
+                    throw new ZipException("Invalid Input");
+                }
+
+                LocalDate.parse(parts[1], dateFormatter);
+
+                return new ParsedCommand(CommandType.DEADLINE, parts[0], parts[1]);
+            } catch (DateTimeParseException e) {
+                throw new ZipException("Invalid Input");
+            }
         }
 
         if (input.startsWith("event ")) {
-            String[] parts = input.substring(6).split(" /from | /to ");
-            assert parts.length == 3 : "invalid event command";
-            return new ParsedCommand(CommandType.EVENT, parts[0], parts[1], parts[2]);
+            try {
+                String[] parts = input.substring(6).split(" /from | /to ");
+                if (parts.length != 3) {
+                    throw new ZipException("Invalid Input");
+                }
+
+                LocalDate.parse(parts[1], dateFormatter);
+                LocalDate.parse(parts[2], dateFormatter);
+
+                return new ParsedCommand(CommandType.EVENT, parts[0], parts[1], parts[2]);
+            } catch (DateTimeParseException e) {
+                throw new ZipException("InvalidInput");
+            }
         }
 
         if (input.startsWith("delete ")) {
-            int index = Integer.parseInt(input.split(" ")[1]) - 1;
-            assert index >= 0 : "index should be greater than or equal to zero";
-            return new ParsedCommand(CommandType.DELETE, index);
+            try {
+                int index = Integer.parseInt(input.split(" ")[1]) - 1;
+                return new ParsedCommand(CommandType.DELETE, index);
+            } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+                throw new ZipException("Invalid input");
+            }
         }
 
         if (input.startsWith("find ")) {
