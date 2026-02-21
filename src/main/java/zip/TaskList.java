@@ -75,6 +75,11 @@ public class TaskList {
         return tasks;
     }
 
+    /**
+     * Returns the deadlines list.
+     *
+     * @return List of tasks that are unmarked deadline tasks sorted chronologically
+     */
     public List<Task> getDeadlines() {
         return tasks.stream()
                 .filter(task -> task.getDeadlineDate().isPresent())

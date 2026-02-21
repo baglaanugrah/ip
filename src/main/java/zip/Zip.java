@@ -31,6 +31,7 @@ public class Zip {
             switch (command.type) {
             case BYE:
                 response.append(ui.showMessage(" Bye. Hope to see you again soon!"));
+                System.exit(0);
                 break;
 
             case LIST:

@@ -18,12 +18,12 @@ public class ParserTest {
     @Test
     public void parse_eventCommand() throws ZipException {
         ParsedCommand cmd =
-                Parser.parse("event meeting /from 2pm /to 4pm");
+                Parser.parse("event meeting /from 2026-02-05 /to 2026-02-08");
 
         assertEquals(CommandType.EVENT, cmd.type);
         assertEquals("meeting", cmd.args[0]);
-        assertEquals("2pm", cmd.args[1]);
-        assertEquals("4pm", cmd.args[2]);
+        assertEquals("2026-02-05", cmd.args[1]);
+        assertEquals("2026-02-08", cmd.args[2]);
     }
 
     @Test
