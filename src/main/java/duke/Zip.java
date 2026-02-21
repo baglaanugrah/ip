@@ -9,6 +9,9 @@ public class Zip {
     private final TaskList tasks;
     private final Ui ui;
 
+    /**
+     * Constructor method for the Zip class
+     */
     public Zip() {
         this.storage = new Storage("textfiles/tasks.txt");
         this.tasks = storage.load();
