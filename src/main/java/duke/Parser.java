@@ -23,11 +23,13 @@ public class Parser {
 
         if (input.startsWith("mark ")) {
             int index = Integer.parseInt(input.split(" ")[1]) - 1;
+            assert index >= 0 : "index should be greater than or equal to zero";
             return new ParsedCommand(CommandType.MARK, index);
         }
 
         if (input.startsWith("unmark ")) {
             int index = Integer.parseInt(input.split(" ")[1]) - 1;
+            assert index >= 0 : "index should be greater than or equal to zero";
             return new ParsedCommand(CommandType.UNMARK, index);
         }
 
@@ -41,16 +43,19 @@ public class Parser {
 
         if (input.startsWith("deadline ")) {
             String[] parts = input.substring(9).split(" /by ", 2);
+            assert parts.length == 2 : "invalid deadline command";
             return new ParsedCommand(CommandType.DEADLINE, parts[0], parts[1]);
         }
 
         if (input.startsWith("event ")) {
             String[] parts = input.substring(6).split(" /from | /to ");
+            assert parts.length == 3 : "invalid event command";
             return new ParsedCommand(CommandType.EVENT, parts[0], parts[1], parts[2]);
         }
 
         if (input.startsWith("delete ")) {
             int index = Integer.parseInt(input.split(" ")[1]) - 1;
+            assert index >= 0 : "index should be greater than or equal to zero";
             return new ParsedCommand(CommandType.DELETE, index);
         }
 
