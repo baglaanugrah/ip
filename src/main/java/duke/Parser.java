@@ -55,6 +55,7 @@ public class Parser {
 
         if (input.startsWith("delete ")) {
             int index = Integer.parseInt(input.split(" ")[1]) - 1;
+            assert index >= 0 : "index should be greater than or equal to zero";
             return new ParsedCommand(CommandType.DELETE, index);
         }
 
