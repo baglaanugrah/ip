@@ -1,4 +1,4 @@
-package duke;
+package zip;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -7,8 +7,8 @@ import java.time.format.DateTimeFormatter;
  * Represents a task with a start and end date.
  */
 public class Event extends Task {
-    private LocalDate from;
-    private LocalDate to;
+    private final LocalDate from;
+    private final LocalDate to;
 
     /**
      * Creates an Event task with a description, start date, and end date.

@@ -1,4 +1,4 @@
-package duke;
+package zip;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
  * Represents a task with a due date.
  */
 public class Deadline extends Task {
-    private LocalDate by;
+    private final LocalDate by;
 
     /**
      * Creates a Deadline task with the given description and due date.

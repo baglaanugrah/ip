@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'application'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'checkstyle'
 }
 
 repositories {
@@ -43,13 +44,13 @@ test {
 }
 
 application {
-        mainClass.set("duke.Launcher")
+        mainClass.set("zip.Launcher")
 }
 
 shadowJar {
-    archiveBaseName = "duke"
+    archiveBaseName = "zip"
     archiveClassifier = null
-    archiveFileName = 'duke.jar'
+    archiveFileName = 'zip.jar'
 
 }
 

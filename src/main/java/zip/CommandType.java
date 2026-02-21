@@ -1,4 +1,4 @@
-package duke;
+package zip;
 
 /**
  * Represents the different kinds of task commands.

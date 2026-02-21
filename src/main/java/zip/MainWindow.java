@@ -1,4 +1,4 @@
-package duke;
+package zip;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

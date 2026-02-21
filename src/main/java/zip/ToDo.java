@@ -1,4 +1,4 @@
-package duke;
+package zip;
 
 /**
  * Represents a task with only a description
