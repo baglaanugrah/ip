@@ -1,4 +1,4 @@
-package duke;
+package zip;
 
 /**
  * Exception class for the project.

@@ -1,4 +1,4 @@
-package duke;
+package zip;
 
 import java.io.File;
 import java.io.FileWriter;

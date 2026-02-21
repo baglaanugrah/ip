@@ -1,4 +1,4 @@
-package duke;
+package zip;
 
 /**
  * Represents a generic task.

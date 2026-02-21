@@ -1,4 +1,4 @@
-package duke;
+package zip;
 
 /**
  * Parses user input into executable commands.

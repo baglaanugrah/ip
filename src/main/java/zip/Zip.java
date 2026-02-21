@@ -1,4 +1,4 @@
-package duke;
+package zip;
 
 /**
  * Zip class
@@ -61,6 +61,7 @@ public class Zip {
 
             case TODO: {
                 String desc = (String) command.args[0];
+
                 Task t = new ToDo(desc);
                 tasks.add(t);
                 storage.save(tasks);
@@ -75,6 +76,7 @@ public class Zip {
             case DEADLINE: {
                 String desc = (String) command.args[0];
                 String by = (String) command.args[1];
+
                 Task d = new Deadline(desc, by);
                 tasks.add(d);
                 storage.save(tasks);
@@ -90,6 +92,7 @@ public class Zip {
                 String desc = (String) command.args[0];
                 String from = (String) command.args[1];
                 String to = (String) command.args[2];
+
                 Task e = new Event(desc, from, to);
                 tasks.add(e);
                 storage.save(tasks);

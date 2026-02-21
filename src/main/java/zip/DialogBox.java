@@ -1,4 +1,4 @@
-package duke;
+package zip;
 
 import java.io.IOException;
 import java.util.Collections;

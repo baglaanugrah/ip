@@ -1,4 +1,4 @@
-package duke;
+package zip;
 
 /**
  * Represents a parsed user command.
