@@ -45,7 +45,7 @@ Got it. I have added this task:
 Now you have 1 tasks in the list.
 ```
 
-### 2. Adding a Deadline Task
+### 2. Adding a deadline task
 #### Adds a task that must be completed by a specific date.
 ### Format
 
@@ -68,7 +68,7 @@ Got it. I have added this task:
 Now you have 2 tasks in the list.
 ```
 
-### 3. Adding an Event Task
+### 3. Adding an event task
 #### Adds a task that spans a time period.
 ### Format
 
@@ -89,7 +89,7 @@ Got it. I have added this task:
 Now you have 3 tasks in the list.
 ```
 
-### 4. Listing All Tasks
+### 4. Listing all tasks
 #### Displays all tasks in the order they were added.
 ### Format
 
