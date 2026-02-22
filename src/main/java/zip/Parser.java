@@ -3,13 +3,15 @@ package zip;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 
 /**
  * Parses user input into executable commands.
  */
 public class Parser {
 
-    private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("uuuu-MM-dd")
+                                                                            .withResolverStyle(ResolverStyle.STRICT);
 
     /**
      * Parses the user input and returns a corresponding ParsedCommand.
@@ -68,7 +70,7 @@ public class Parser {
 
                 return new ParsedCommand(CommandType.DEADLINE, parts[0], parts[1]);
             } catch (DateTimeParseException e) {
-                throw new ZipException("Invalid Input");
+                throw new ZipException("Invalid date format");
             }
         }
 
@@ -79,12 +81,17 @@ public class Parser {
                     throw new ZipException("Invalid Input");
                 }
 
-                LocalDate.parse(parts[1], dateFormatter);
-                LocalDate.parse(parts[2], dateFormatter);
+                LocalDate fromDate = LocalDate.parse(parts[1], dateFormatter);
+                LocalDate toDate = LocalDate.parse(parts[2], dateFormatter);
+
+                if (fromDate.isAfter(toDate)) {
+                    throw new ZipException("The start date cannot be after the end date.");
+                }
 
                 return new ParsedCommand(CommandType.EVENT, parts[0], parts[1], parts[2]);
+
             } catch (DateTimeParseException e) {
-                throw new ZipException("InvalidInput");
+                throw new ZipException("Invalid date format.");
             }
         }
 
